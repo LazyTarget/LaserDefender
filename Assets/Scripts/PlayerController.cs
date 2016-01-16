@@ -1,15 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : UnitBase {
+
 	public float speed = 15f;
 	public float padding = 1f;
+
 	private float xMin;
 	private float xMax;
 	private float yMin;
 	private float yMax;
+	
+	void Awake () {
+		direction = Vector2.up;
+	}
 
-	// Use this for initialization
 	void Start () {
 		float distanceToCamera = transform.position.z - Camera.main.transform.position.z;
 
@@ -22,9 +27,22 @@ public class PlayerController : MonoBehaviour {
 		yMin = bottomMost.y + padding;
 		yMax = bottomMost.y + (Mathf.Abs(topMost.y) + Mathf.Abs(bottomMost.y)) * 0.35f - padding;
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
+
+		if(Input.GetKeyDown(KeyCode.Space)) {
+			BeginShooting();
+			//Shoot();
+		}
+		if(Input.GetKeyUp(KeyCode.Space)) {
+			StopShooting();
+		}
+
+		UpdatePosition();
+	}
+
+
+	void UpdatePosition() {
 		if(Input.GetKey(KeyCode.LeftArrow)){
 			transform.position += Vector3.left * speed * Time.deltaTime;
 		}
@@ -37,10 +55,16 @@ public class PlayerController : MonoBehaviour {
 		if(Input.GetKey(KeyCode.DownArrow)){
 			transform.position += Vector3.down * speed * Time.deltaTime;
 		}
-
+		
 		// restrict movement to playspace
 		float newX = Mathf.Clamp(transform.position.x, xMin, xMax);
 		float newY = Mathf.Clamp(transform.position.y, yMin, yMax);
 		transform.position = new Vector3(newX, newY, transform.position.z);
+	}
+
+	
+	void OnTriggerEnter2D (Collider2D collider) {
+		//Debug.Log("PlayerController:OnTriggerEnter2D()");
+		//Destroy(gameObject);
 	}
 }
