@@ -5,6 +5,8 @@ public class Enemy : UnitBase {
 
 	public float shotsPerSecond = 1.0f;
 
+	public override int teamID { get { return 0; } }
+
 	void Awake () {
 		direction = -Vector2.up;
 	}

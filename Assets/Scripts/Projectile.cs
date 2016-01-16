@@ -34,6 +34,10 @@ public class Projectile : MonoBehaviour {
 				Debug.Log("Ignoring projectile trigger, as bullet touches the shooter");
 				return;
 			}
+			if (unit.teamID == shooter.teamID) {
+				Debug.Log("Ignoring projectile trigger, as friendly fire is disabled");
+				return;
+			}
 
 			unit.ProjectileHit(this);
 

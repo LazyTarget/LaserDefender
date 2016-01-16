@@ -10,6 +10,8 @@ public class PlayerController : UnitBase {
 	private float xMax;
 	private float yMin;
 	private float yMax;
+
+	public override int teamID { get { return 1; } }
 	
 	void Awake () {
 		direction = Vector2.up;

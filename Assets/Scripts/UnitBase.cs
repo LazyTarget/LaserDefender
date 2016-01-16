@@ -11,6 +11,7 @@ public abstract class UnitBase : MonoBehaviour
 	public Weapon weapon;
 	public float health = 100;
 	public Vector2 direction;
+	public abstract int teamID { get; }
 	
 	
 	void Awake () {
