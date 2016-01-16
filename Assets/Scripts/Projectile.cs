@@ -5,8 +5,9 @@ public class Projectile : MonoBehaviour {
 
 	private UnitBase shooter;
 
-	public float speed = 600f;
-	public float damage = 40f;
+	public float speed = 100f;
+	public float damage = 25f;
+	public float speedIncrease = 1.0981f;
 
 	
 	public void Init(UnitBase shooter){
@@ -18,7 +19,9 @@ public class Projectile : MonoBehaviour {
 	}
 
 	void Update () {
-		
+		var velocity = GetComponent<Rigidbody2D>().velocity;
+		velocity = new Vector2(velocity.x, velocity.y * Mathf.Max(1, speedIncrease));
+		GetComponent<Rigidbody2D>().velocity = velocity;
 	}
 
 	void OnTriggerEnter2D (Collider2D collider) {
