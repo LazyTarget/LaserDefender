@@ -11,12 +11,12 @@ public class PlayerController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		float distance = transform.position.z - Camera.main.transform.position.z;
+		float distanceToCamera = transform.position.z - Camera.main.transform.position.z;
 
-		var leftMost = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance));
-		var rightMost = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance));
-		var topMost = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, distance));
-		var bottomMost = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance));
+		var leftMost = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distanceToCamera));
+		var rightMost = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distanceToCamera));
+		var topMost = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, distanceToCamera));
+		var bottomMost = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distanceToCamera));
 		xMin = leftMost.x + padding;
 		xMax = rightMost.x - padding;
 		yMin = bottomMost.y + padding;
