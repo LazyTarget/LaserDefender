@@ -6,6 +6,7 @@ public class EnemyFormation : MonoBehaviour {
 	public float width = 10f;
 	public float height = 5f;
 	public float speed = 5f;
+	public float spawnDelay = 1.0f;
 
 	private Vector3 direction = Vector3.right;
 	private float xmin;
@@ -20,10 +21,7 @@ public class EnemyFormation : MonoBehaviour {
 		xmin = topLeftEdge.x;
 		xmax = bottomRightEdge.x;
 
-		foreach (Transform child in transform) {
-			GameObject enemy = (GameObject) Instantiate(enemyPrefab, child.transform.position, Quaternion.identity);
-			enemy.transform.parent = child;
-		}
+		SpawnEnemies();
 	}
 
 	void OnDrawGizmos () {
@@ -42,6 +40,12 @@ public class EnemyFormation : MonoBehaviour {
 		} else if (rightEdgeOfFormation > xmax) {
 			direction = Vector3.left;
 		}
+
+		var members = MembersAlive();
+		if (members <= 0) {
+			//SpawnEnemies();
+			SpawnUntilFull();
+		}
 	}
 
 	void ChangeDirection() {
@@ -51,4 +55,50 @@ public class EnemyFormation : MonoBehaviour {
 			direction = Vector3.right;
 		}
 	}
+
+	int MembersAlive() {
+		var count = 0;
+		foreach (Transform position in transform) {
+			var hasEnemy = position.transform.childCount > 0;
+			if (hasEnemy) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	void SpawnEnemies() {
+		Debug.Log("Spawning enemies");
+		transform.position = new Vector3(0, transform.position.y, transform.position.z);		// start position
+		foreach (Transform child in transform) {
+			SpawnEnemyAtPosition(child);
+		}
+	}
+
+	void SpawnUntilFull() {
+		var position = NextFreePosition();
+		if (position != null){
+			SpawnEnemyAtPosition(position);
+			Invoke("SpawnUntilFull", spawnDelay);
+		}
+	}
+	
+	GameObject SpawnEnemyAtPosition(Transform position) {
+		Debug.Log("Spawning enemy at position");
+
+		GameObject enemy = (GameObject) Instantiate(enemyPrefab, position.transform.position, Quaternion.identity);
+		enemy.transform.parent = position;
+		return enemy;
+	}
+
+	Transform NextFreePosition() {
+		foreach (Transform position in transform) {
+			var hasEnemy = position.transform.childCount > 0;
+			if (!hasEnemy) {
+				return position.transform;
+			}
+		}
+		return null;
+	}
+
 }
