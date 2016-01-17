@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public class EnemyFormation : MonoBehaviour {
-	public GameObject enemyPrefab;
+	public GameObject[] enemyPrefabs;
 	public float width = 10f;
 	public float height = 5f;
 	public float speed = 5f;
@@ -86,6 +87,12 @@ public class EnemyFormation : MonoBehaviour {
 	GameObject SpawnEnemyAtPosition(Transform position) {
 		Debug.Log("Spawning enemy at position");
 
+		var prefabs = enemyPrefabs.Where(x => x != null).ToList();
+		GameObject enemyPrefab = null;
+		while (enemyPrefab == null) {
+			var rand = Random.Range(0, prefabs.Count);
+			enemyPrefab = prefabs.ElementAtOrDefault(rand);
+		}
 		GameObject enemy = (GameObject) Instantiate(enemyPrefab, position.transform.position, Quaternion.identity);
 		enemy.transform.parent = position;
 		return enemy;
