@@ -3,13 +3,11 @@ using System.Collections;
 
 public class LevelManager : MonoBehaviour {
 
-	public void LoadLevel (string name) {
-		//OnLevelRequesting(name);
+	public const int _lvlGame = 1;
 
+	public void LoadLevel (string name) {
 		Debug.Log("LoadLevel() Name: " + name);
 		Application.LoadLevel(name);
-
-		OnLevelRequested(name);
 	}
 
 	public void LoadNextLevel() {
@@ -22,9 +20,10 @@ public class LevelManager : MonoBehaviour {
 		Application.Quit();
 	}
 
+	void OnLevelWasLoaded(int level) {
+		Debug.Log("OnLevelWasLoaded() Level: " + level);
 
-	private void OnLevelRequested(string name) {
-		if (name == "Game"){
+		if (level == _lvlGame) {
 			ScoreKeeper.Reset();
 		}
 	}
