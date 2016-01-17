@@ -69,4 +69,12 @@ public class PlayerController : UnitBase {
 		//Debug.Log("PlayerController:OnTriggerEnter2D()");
 		//Destroy(gameObject);
 	}
+	
+	protected override void Explode ()
+	{
+		base.Explode ();
+
+		var lvlManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+		lvlManager.LoadLevel("Gameover");
+	}
 }

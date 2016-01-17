@@ -4,7 +4,8 @@ using System.Collections;
 public class Weapon : MonoBehaviour {
 
 	private UnitBase owner;
-
+	
+	public AudioClip shootSound;
 	public Projectile projectile;
 	public float firingRate = 0.2f;
 
@@ -38,5 +39,7 @@ public class Weapon : MonoBehaviour {
 		var proj = (Projectile) Instantiate(projectile, owner.transform.position, Quaternion.identity);
 		proj.GetComponent<Rigidbody2D>().velocity = owner.direction * Mathf.Abs(proj.speed) * Time.deltaTime;
 		proj.Init (owner);
+
+		AudioSource.PlayClipAtPoint(shootSound, transform.position, 0.3f);
 	}
 }

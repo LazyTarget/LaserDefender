@@ -7,7 +7,8 @@ public abstract class UnitBase : MonoBehaviour
 	{
 
 	}
-	
+
+	public AudioClip deathSound;
 	public Weapon weapon;
 	public float health = 100;
 	public Vector2 direction;
@@ -15,6 +16,7 @@ public abstract class UnitBase : MonoBehaviour
 	
 	
 	void Awake () {
+
 	}
 	
 	void Start () {
@@ -63,6 +65,8 @@ public abstract class UnitBase : MonoBehaviour
 		Debug.Log("Unit died");
 		
 		StopShooting();
+
+		AudioSource.PlayClipAtPoint(deathSound, transform.position, 1f);
 
 		Destroy(gameObject);
 		// todo: animate explosion..
