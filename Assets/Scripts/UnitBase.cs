@@ -15,15 +15,17 @@ public abstract class UnitBase : MonoBehaviour
 	public abstract int teamID { get; }
 	
 	
-	void Awake () {
+	protected virtual void Awake () {
 
 	}
 	
-	void Start () {
-
+	protected virtual void Start () {
+		var weaponInstance = (Weapon) Instantiate(weapon, new Vector2(0, 0), Quaternion.identity);
+		weapon = weaponInstance;
+		weapon.transform.parent = transform;
 	}
 	
-	void Update () {
+	protected virtual void Update () {
 
 	}
 

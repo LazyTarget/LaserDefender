@@ -13,11 +13,13 @@ public class PlayerController : UnitBase {
 
 	public override int teamID { get { return 1; } }
 	
-	void Awake () {
+	protected override void Awake () {
 		direction = Vector2.up;
 	}
 
-	void Start () {
+	protected override void Start () {
+		base.Start ();
+
 		float distanceToCamera = transform.position.z - Camera.main.transform.position.z;
 
 		var leftMost = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distanceToCamera));
@@ -30,7 +32,7 @@ public class PlayerController : UnitBase {
 		yMax = bottomMost.y + (Mathf.Abs(topMost.y) + Mathf.Abs(bottomMost.y)) * 0.35f - padding;
 	}
 
-	void Update () {
+	protected override void Update () {
 
 		if(Input.GetKeyDown(KeyCode.Space)) {
 			BeginShooting();

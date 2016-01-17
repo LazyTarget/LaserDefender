@@ -11,15 +11,33 @@ public class HealthBar : MonoBehaviour {
 	public Slider slider;
 
 	private Vector2 _unitSize;
+	public Slider _sliderInstance;
 
+
+	void Awake () {
+		//_sliderInstance = (Slider) Instantiate(slider, transform.position, Quaternion.identity);
+		//var canvas = GameObject.Find("Canvas");
+		//_sliderInstance.transform.parent = canvas.transform;
+	}
 
 	// Use this for initialization
 	void Start () {
 		var spriteRenderer = GetComponent<SpriteRenderer>();
 		_unitSize = new Vector2(spriteRenderer.sprite.rect.width, spriteRenderer.sprite.rect.height);
 
-		slider.maxValue = maxHealth;
-		slider.transform.parent = transform;
+
+		//_sliderInstance = (Slider) Instantiate(slider, transform.position, Quaternion.identity);
+		_sliderInstance = (Slider) Instantiate(slider, new Vector2(0, 0), Quaternion.identity);
+		//_sliderInstance = slider;
+		_sliderInstance.maxValue = maxHealth;
+
+		var canvas = GameObject.Find("Canvas");
+		//_sliderInstance.transform.parent = canvas.transform;
+		_sliderInstance.transform.SetParent(canvas.transform, false);
+		//_sliderInstance.transform.parent = transform;
+
+		//slider.maxValue = maxHealth;
+		//slider.transform.parent = transform;
 		SetCurrent (curHealth);
 	}
 	
@@ -54,10 +72,15 @@ public class HealthBar : MonoBehaviour {
 		}
 
 		// Offset to unit
-		var offset = new Vector2(healthBarLength / 2, _unitSize.y / 2);
-		Vector2 targetPos = Camera.main.WorldToScreenPoint(transform.position);
-		targetPos -= offset;
-		targetPos = new Vector2(targetPos.x, Screen.height - targetPos.y);
+		var offset = new Vector3(healthBarLength / 2, _unitSize.y / 2);
+		//Vector2 targetPos = Camera.main.WorldToScreenPoint(transform.position);
+		//Vector3 targetPos = new Vector3(0, 0, transform.position.z);
+		Vector3 targetPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+		//targetPos -= offset;
+		//targetPos = new Vector3(targetPos.x, Screen.height - targetPos.y, targetPos.z);
+
+		targetPos = Camera.main.WorldToScreenPoint(targetPos);
+		//targetPos = Camera.main.WorldToViewportPoint(targetPos);
 		var targetRect = new Rect(targetPos.x, targetPos.y, healthBarLength, healthBarHeight);
 
 		// Draw
@@ -65,7 +88,10 @@ public class HealthBar : MonoBehaviour {
 		//GUI.HorizontalSlider(targetRect, percentage, 0, maxHealth);
 		//GUI.Slider(targetRect, percentage, maxHealth, 0, percentage, null, null, true, 13);
 
-		slider.transform.position = targetPos;
+		if (_sliderInstance != null) {
+			//slider.transform.position = targetPos;
+			_sliderInstance.transform.position = targetPos;
+		}
 		
 		if (showProgress) {
 			var length = healthBarLength * percentage;
@@ -76,13 +102,21 @@ public class HealthBar : MonoBehaviour {
 
 	public void SetCurrent(float health) {
 		curHealth = health;
-		slider.value = curHealth;
-		
 		if (curHealth < 0)
 			curHealth = 0;
 		if (curHealth > maxHealth)
 			curHealth = maxHealth;
 		if (maxHealth < 1)
 			maxHealth = 1;
+		
+		//slider.value = curHealth;
+		_sliderInstance.value = curHealth;
+	}
+
+	void OnDestroy() {
+		Debug.Log("Calling destroy on healthbar");
+		if (_sliderInstance != null) {
+			Destroy(_sliderInstance.gameObject);
+		}
 	}
 }

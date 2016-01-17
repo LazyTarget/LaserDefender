@@ -8,15 +8,16 @@ public class Enemy : UnitBase {
 	public float shotsPerSecond = 1.0f;
 	public int scoreValue = 150;
 
-	void Awake () {
+	protected override void Awake () {
 		direction = -Vector2.up;
 	}
 
-	void Start () {
+	protected override void Start () {
+		base.Start ();
 		//BeginShooting();
 	}
 
-	void Update () {
+	protected override void Update () {
 		//Shoot();
 
 		var fireProbability = Time.deltaTime * shotsPerSecond;
