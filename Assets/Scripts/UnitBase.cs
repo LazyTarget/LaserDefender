@@ -52,7 +52,13 @@ public abstract class UnitBase : MonoBehaviour
 
 		if (health > 0) {
 			var damage = projectile.GetDamage();
-			health -= damage;			
+			health -= damage;
+
+			var healthBar = GetComponent<HealthBar>();
+			if (healthBar != null) {
+				healthBar.SetCurrent(health);
+			}
+
 			if (health <= 0) {
 				Explode ();
 			}
