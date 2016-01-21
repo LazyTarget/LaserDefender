@@ -6,47 +6,31 @@ public class HealthBar : MonoBehaviour {
 	public float maxHealth = 100;
 	public float curHealth = 100;
 	public bool showText = true;
-	public bool showProgress = true;
 	public Vector2 fixedSize;
 	public Slider slider;
 
 	private Vector2 _unitSize;
-	public Slider _sliderInstance;
-
-
-	void Awake () {
-		//_sliderInstance = (Slider) Instantiate(slider, transform.position, Quaternion.identity);
-		//var canvas = GameObject.Find("Canvas");
-		//_sliderInstance.transform.parent = canvas.transform;
-	}
+	private Slider _sliderInstance;
 
 	// Use this for initialization
 	void Start () {
 		var spriteRenderer = GetComponent<SpriteRenderer>();
 		_unitSize = new Vector2(spriteRenderer.sprite.rect.width, spriteRenderer.sprite.rect.height);
 
-
-		//_sliderInstance = (Slider) Instantiate(slider, transform.position, Quaternion.identity);
 		_sliderInstance = (Slider) Instantiate(slider, new Vector2(0, 0), Quaternion.identity);
-		//_sliderInstance = slider;
+		var canvas = GameObject.Find("Canvas");
+		_sliderInstance.transform.SetParent(canvas.transform, false);
 		_sliderInstance.maxValue = maxHealth;
 
-		var canvas = GameObject.Find("Canvas");
-		//_sliderInstance.transform.parent = canvas.transform;
-		_sliderInstance.transform.SetParent(canvas.transform, false);
-		//_sliderInstance.transform.parent = transform;
-
-		//slider.maxValue = maxHealth;
-		//slider.transform.parent = transform;
 		SetCurrent (curHealth);
 	}
-	
-	// Update is called once per frame
-	void Update () {
 
-	}
+	//void OnGUI() {
+	void Update() {
+		if (_sliderInstance == null) {
+			return;
+		}
 
-	void OnGUI() {
 		var percentage = curHealth / maxHealth;
 
 		// Text
@@ -72,32 +56,14 @@ public class HealthBar : MonoBehaviour {
 		}
 
 		// Offset to unit
-		var offset = new Vector3(healthBarLength / 2, _unitSize.y / 2);
-		//Vector2 targetPos = Camera.main.WorldToScreenPoint(transform.position);
-		//Vector3 targetPos = new Vector3(0, 0, transform.position.z);
+		//var offset = new Vector3(healthBarLength / 2, _unitSize.y / 2);
+		var offset = new Vector3(0, _unitSize.y / 3);
+
 		Vector3 targetPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-		//targetPos -= offset;
-		//targetPos = new Vector3(targetPos.x, Screen.height - targetPos.y, targetPos.z);
-
 		targetPos = Camera.main.WorldToScreenPoint(targetPos);
-		//targetPos = Camera.main.WorldToViewportPoint(targetPos);
+		targetPos -= offset;
 		var targetRect = new Rect(targetPos.x, targetPos.y, healthBarLength, healthBarHeight);
-
-		// Draw
-		//GUI.Box(targetRect, content);
-		//GUI.HorizontalSlider(targetRect, percentage, 0, maxHealth);
-		//GUI.Slider(targetRect, percentage, maxHealth, 0, percentage, null, null, true, 13);
-
-		if (_sliderInstance != null) {
-			//slider.transform.position = targetPos;
-			_sliderInstance.transform.position = targetPos;
-		}
-		
-		if (showProgress) {
-			var length = healthBarLength * percentage;
-			//GUI.Box(new Rect(targetPos.x, Screen.height - targetPos.y, length, healthBarHeight), percentage.ToString ());
-			//GUI.color = Color.red;
-		}
+		_sliderInstance.transform.position = targetPos;
 	}
 
 	public void SetCurrent(float health) {
